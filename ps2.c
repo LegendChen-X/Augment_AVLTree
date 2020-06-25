@@ -141,14 +141,14 @@ int calculate_smaller_elements(int target,struct Node *root)
     while(1)
     {
         if(root->key==target) break;
+        
         else if(root->key<target)
         {
-            if(root->left)
-                res = res + root->left->size + 1 + 1;
+            if(root->left) res = res + root->left->size + 1 + 1;
             else res += 1;
             root = root->right;
-            
         }
+        
         else
         {
             res = res;
@@ -173,8 +173,9 @@ int main()
     int value = -1;
     
     //test 0
-    struct Node* root = NULL;
     printf("test 0\n");
+    
+    struct Node* root = NULL;
     int test_0[7] = {3,5,1,4,7,6,2};
     int res[7];
     
@@ -197,11 +198,14 @@ int main()
     
     //test 1
     printf("test 1\n");
+    
     struct Node* root_1 = NULL;
     int test_1[7] = {1,2,3,4,5,6,7};
+    
     for(int i=0;i<7;++i)
         printf("%d ",test_1[i]);
     printf("\n");
+    
     for(int i=6;i>-1;--i)
     {
         root_1 = insert(root_1,test_1[i],NULL);
@@ -218,9 +222,11 @@ int main()
     printf("test 2\n");
     struct Node* root_2 = NULL;
     int test_2[7] = {7,6,5,4,3,2,1};
+    
     for(int i=0;i<7;++i)
         printf("%d ",test_2[i]);
     printf("\n");
+    
     for(int i=6;i>-1;--i)
     {
         root_2 = insert(root_2,test_2[i],NULL);
