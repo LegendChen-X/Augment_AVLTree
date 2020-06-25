@@ -250,7 +250,7 @@ int main()
     //test 3
     printf("test 3, which is for large input: %d\n",LARGE_INPUT);
     int brute_force_value = 0;
-    int ordered_static_tree_value = 0;
+    int ordered_statistic_tree_value = 0;
     
     struct Node* root_3 = NULL;
     int test_3[LARGE_INPUT];
@@ -291,7 +291,7 @@ int main()
     {
         root_3 = insert(root_3,test_3[i],NULL);
         value = calculate_smaller_elements(test_3[i],root_3);
-        ordered_static_tree_value += value;
+        ordered_statistic_tree_value += value;
     }
     
     if (clock_gettime(CLOCK_MONOTONIC_RAW, &end))
@@ -301,8 +301,8 @@ int main()
     }
     
     time_diff = 1e3 * (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec) / 1.0e6;
-    fprintf(stdout, "Time for oreder static tree is: %.4f\n", time_diff);
-    fprintf(stdout, "Value for oreder static tree is: %d\n", ordered_static_tree_value);
+    fprintf(stdout, "Time for order statistic tree is: %.4f\n", time_diff);
+    fprintf(stdout, "Value for order statistic tree is: %d\n", ordered_statistic_tree_value);
     
     return 0;
 }
