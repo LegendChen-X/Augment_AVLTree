@@ -1,5 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include <time.h>
+#define LARGE_INPUT 100000
   
 typedef struct Node
 {
@@ -196,6 +198,8 @@ int main()
     
     free_tree(root);
     
+    printf("\n");
+    
     //test 1
     printf("test 1\n");
     
@@ -218,6 +222,8 @@ int main()
     printf("\n");
     free_tree(root_1);
     
+    printf("\n");
+    
     //test 2
     printf("test 2\n");
     struct Node* root_2 = NULL;
@@ -238,6 +244,65 @@ int main()
         printf("%d ",res[i]);
     printf("\n");
     free_tree(root_1);
-  
+    
+    printf("\n");
+    
+    //test 3
+    printf("test 3, which is for large input: %d\n",LARGE_INPUT);
+    int brute_force_value = 0;
+    int ordered_static_tree_value = 0;
+    
+    struct Node* root_3 = NULL;
+    int test_3[LARGE_INPUT];
+    for(int i=0;i<LARGE_INPUT;++i) test_3[i] = LARGE_INPUT - i;
+    
+    struct timespec start, end;
+    double time_diff;
+    if (clock_gettime(CLOCK_MONOTONIC_RAW, &start))
+    {
+        perror("clock_gettime");
+        exit(1);
+    }
+    
+    for(int i=0;i<LARGE_INPUT;++i)
+        for(int j=i;j<LARGE_INPUT;++j)
+            if(test_3[i]>test_3[j])
+                brute_force_value++;
+                
+    if (clock_gettime(CLOCK_MONOTONIC_RAW, &end))
+    {
+        perror("clock_gettime");
+        exit(1);
+    }
+    
+    time_diff = 1e3 * (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec) / 1.0e6;
+    fprintf(stdout, "Time for brute force is: %.4f\n", time_diff);
+    fprintf(stdout, "Value for brute force is: %d\n", brute_force_value);
+    
+    printf("---------------------\n");
+    
+    if (clock_gettime(CLOCK_MONOTONIC_RAW, &start))
+    {
+        perror("clock_gettime");
+        exit(1);
+    }
+    
+    for(int i=LARGE_INPUT-1;i>-1;--i)
+    {
+        root_3 = insert(root_3,test_3[i],NULL);
+        value = calculate_smaller_elements(test_3[i],root_3);
+        ordered_static_tree_value += value;
+    }
+    
+    if (clock_gettime(CLOCK_MONOTONIC_RAW, &end))
+    {
+        perror("clock_gettime");
+        exit(1);
+    }
+    
+    time_diff = 1e3 * (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec) / 1.0e6;
+    fprintf(stdout, "Time for oreder static tree is: %.4f\n", time_diff);
+    fprintf(stdout, "Value for oreder static tree is: %d\n", ordered_static_tree_value);
+    
     return 0;
 }
