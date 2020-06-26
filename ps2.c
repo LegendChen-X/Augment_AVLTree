@@ -40,18 +40,22 @@ struct Node* newNode(int key,struct Node* parent)
 struct Node *rightRotate(struct Node *y)
 {
     struct Node *x = y->left;
+    struct Node *T2 = x->right;
+    struct Node* y_parent_buff = y ? y->parent : NULL;
     
     int buff_x_left_size = x->left ? (x->left->size+1) : 0;
     int buff_x_right_size = x->right ? (x->right->size+1) : 0;
-    
     int buff_y_right_size = y->right ? (y->right->size+1) : 0;
     
-    struct Node *T2 = x->right;
-        
+    x->right = y;
     y->left = T2;
     
     y->size = buff_x_right_size + buff_y_right_size;
     x->size = buff_x_left_size + 1 + y->size;
+    
+    x->parent = y_parent_buff;
+    y->parent = x;
+    if(T2) T2->parent = y;
     
     y->balance = max(balance(y->left), balance(y->right))+1;
     x->balance = max(balance(x->left), balance(x->right))+1;
@@ -61,19 +65,23 @@ struct Node *rightRotate(struct Node *y)
   
 struct Node *leftRotate(struct Node *x)
 {
-    int buff_x_left_size = x->left ? (x->left->size+1) : 0;
-    
     struct Node *y = x->right;
+    struct Node *T2 = y->left;
+    struct Node* x_parent_buff = x ? x->parent : NULL;
+    
     int buff_y_left_size = y->left ? (y->left->size+1) : 0;
     int buff_y_right_size = y->right ? (y->right->size+1) : 0;
+    int buff_x_left_size = x->left ? (x->left->size+1) : 0;
     
-    struct Node *T2 = y->left;
-  
     y->left = x;
     x->right = T2;
     
     x->size = buff_x_left_size + buff_y_left_size;
     y->size = buff_y_right_size + x->size + 1;
+    
+    y->parent = x_parent_buff;
+    x->parent = y;
+    if(T2) T2->parent = x;
   
     x->balance = max(balance(x->left), balance(x->right))+1;
     y->balance = max(balance(y->left), balance(y->right))+1;
@@ -101,7 +109,7 @@ struct Node* insert(struct Node* node, int key, struct Node* parent)
 {
     if (node == NULL)
     {
-        struct Node * new = newNode(key,parent);
+        struct Node* new = newNode(key,parent);
         update_parent_size(new);
         return new;
     }
